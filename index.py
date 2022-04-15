@@ -28,31 +28,25 @@ def main():
     print("List type (random, increasing, decreasing, constant, v-shape):")
     list_type = input()
 
-    print('Tests:')
-
-    tests = int(input())
-
-    writer = pandas.ExcelWriter(
-        f'out/{list_type}_{list_length}_{step}_{tests}.xlsx',
-        engine='openpyxl')
+    writer = pandas.ExcelWriter(f'out/{list_type}_{list_length}_{step}.xlsx',
+                                engine='openpyxl')
+    N = []
+    IS = []
+    SS = []
+    HS = []
+    MS = []
 
     for i in range(0, 15 * step, step):
         print(f'List length: {list_length + i}')
-        IS = []
-        SS = []
-        HS = []
-        MS = []
-        for j in range(tests):
-            print(f'Test {j+1}')
-            list = list_generator(list_length + i, list_type)
-            IS.append(test_sort_func(insertion_sort, list))
-            SS.append(test_sort_func(selection_sort, list))
-            HS.append(test_sort_func(heap_sort, list))
-            MS.append(test_sort_func(merge_sort, list))
-        data = pandas.DataFrame({'IS': IS, 'SS': SS, 'HS': HS, 'MS': MS})
-        data.to_excel(writer, sheet_name=f'{list_length+i}', index=False)
-        data = None
+        list = list_generator(list_length + i, list_type)
+        N.append(list_length + i)
+        IS.append(test_sort_func(insertion_sort, list))
+        SS.append(test_sort_func(selection_sort, list))
+        HS.append(test_sort_func(heap_sort, list))
+        MS.append(test_sort_func(merge_sort, list))
 
+    data = pandas.DataFrame({'N': N, 'IS': IS, 'SS': SS, 'HS': HS, 'MS': MS})
+    data.to_excel(writer, sheet_name=f'{list_type}', index=False)
     writer.save()
 
 
